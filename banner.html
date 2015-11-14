@@ -24,15 +24,18 @@
         if(inputField.value.length!=5){
           if(helpText!= null)
             helpText.innerHTML="Enter only five numerals";
+           return false;
         // проверяем все ли символы это цифры  
         }else if(isNaN(inputField.value)){
           if(helpText!=null)
             helpText.innerHTML="Please enter a numeral";
+          return false;
         }
         // если данные корректны убираем подсказку
         else{
           if(helpText!=null)
             helpText.innerHTML="";
+          return true; 
         }
       }
       function validateNonEmpty(inputField,helpText){
@@ -57,11 +60,13 @@
               if(helpText!=null){  
               helpText.innerHTML="Please enter a value "+minLength+" to "+maxLength+" characters in length."
              }
+             return false;
         }
         else{
             if(helpText!=null){  
               helpText.innerHTML="";
              }
+              return true;
         }
      }
      function validateDate(inputField,helpText){
@@ -89,6 +94,19 @@
         return validateRexEx(/^[\w\.-_\+\d]+@[\w-]+(\.\w{2,4})+$/,
           inputField.value, helpText,
            "Please, enter an email address (for example, johndoe@acme.com).");
+     }
+     function placeOrder(form){
+      // проверяем все ли поля заполнены корректно
+     if( validateLength(1,32,form["message"], form["message_help"])&&
+         validateZIPCode(form["zipcode"],form["zipcode_help"])&&
+         validateDate(form["date"],form["date_help"])&&
+         validateNonEmpty(form["name"],form["name_help"])&&
+         validatePhone(form["phone"],form["phone_help"])&&
+         validateEmail(form["email"],form["email_help"]) )
+            alert ("Order is received.");
+       else 
+            alert ("Please,  enter correct data !"); 
+
      }
      </script> 
  </head>
@@ -133,6 +151,7 @@
             onblur="validateEmail(this,document.getElementById('email_help'))">
             <span id="email_help" class="help"></span>
     	</div>
+      <input type="button" value="Order Banner" onclick="placeOrder(this.form)">
     </form>
  </body>
 <html>
