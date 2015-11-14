@@ -4,6 +4,21 @@
      <title>Banner</title>
      <link rel="stylesheet" type="text/css" href="style.css">
      <script type="text/javascript">
+     function validateRexEx(regex,inputStr,helpText,helpMessage){
+      // проверяем корректность данных в inputStr
+      if(!regex.test(inputStr)){
+        // если данные некорретны введем текст подсказки
+        if(helpText!=null)
+          helpText.innerHTML=helpMessage;
+        return false;
+      }
+      else{
+        // если данные корректны , то убираем подсказку
+        if (helpText!=null)
+          helpText.innerHTML="";  
+        return true;
+      }
+     }
       function validateZIPCode(inputField,helpText){
         // проверяем кол-во вводимых символов, их должно быть 5-ть
         if(inputField.value.length!=5){
@@ -26,13 +41,16 @@
             if(helpText!=null){
             helpText.innerHTML="Please enter a value";
             }
+            return false;
         }
         else{
             if(helpText!=null){
             helpText.innerHTML="";
             }
+            return true;
         }
      }
+     
      function validateLength(minLength,maxLength,inputField,helpText){
         // проверяем корректность длины введенного текста
         if (inputField.value.length<1||32<inputField.value.length) {
@@ -45,6 +63,32 @@
               helpText.innerHTML="";
              }
         }
+     }
+     function validateDate(inputField,helpText){
+      // проверяем наличие данных в строке
+      if (!validateNonEmpty(inputField,helpText))
+        return false;
+      // если данные есть , то проверяем соответствие введенных данных заданному шаблону ММ/ДД/ГГ или ММ/ДД/ГГГГ
+        return validateRexEx(/^\d{2}\/\d{2}\/\d{2}|\d{4}$/,inputField.value,helpText, "Please enter date (for example, 01/14/2014).");
+      
+     }
+     function validatePhone(inputField,helpText){
+      // проверяем наличие данных в строке
+      if (!validateNonEmpty(inputField,helpText))
+        return false
+      // если данные есть , то проверяем соответствие введенных данных заданному шаблону ###-###-####
+      return validateRexEx(/^\d{3}-\d{3}-\d{4}$/,
+        inputField.value, helpText,
+       " Please, enter a phone nomber (for example, 123-456-7890).");
+     }
+     function validateEmail(inputField,helpText){
+      // проверяем наличие данных в строке
+      if(!validateNonEmpty(inputField,helpText))
+        return false
+      // если данные есть, проверяем являются ли они адресом электроной почты
+        return validateRexEx(/^[\w\.-_\+\d]+@[\w-]+(\.\w{2,4})+$/,
+          inputField.value, helpText,
+           "Please, enter an email address (for example, johndoe@acme.com).");
      }
      </script> 
  </head>
@@ -68,7 +112,7 @@
     	<div class="field">
     		Enter the date for the message to be shown:
     		<input id="date" name="date" type="text" size="32"
-            onblur="validateNonEmpty(this,document.getElementById('date_help'))">
+            onblur="validateDate(this,document.getElementById('date_help'))">
             <span id="date_help" class="help"></span>
     	</div>
     	<div class="field">
@@ -80,13 +124,13 @@
     	<div class="field">
     		Enter your phone number:
     		<input id="phone" name="phone" type="text" size="12"
-            onblur="validateNonEmpty(this,document.getElementById('phone_help'))">
+            onblur="validatePhone(this,document.getElementById('phone_help'))">
             <span id="phone_help" class="help"></span>
     	</div>
     	<div class="field">
     		Enter your email address:
     		<input id="email" name="email" type="text" size="32"
-            onblur="validateNonEmpty(this,document.getElementById('email_help'))">
+            onblur="validateEmail(this,document.getElementById('email_help'))">
             <span id="email_help" class="help"></span>
     	</div>
     </form>
